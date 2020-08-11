@@ -1,0 +1,17 @@
+Language: php
+
+php:
+  - 7.3
+  - 7.4
+
+matrix:
+  - php: 7.4
+
+install:
+  - composer self-update
+  - composer install
+
+script:
+  - ./vendor/bien/php-cs-fixer fix -s
+  - ./vendor/bien/php-cs-fixer fix --diff --dry-run
+  - ./vendor/bien/phpunit --colors --coverage-text
