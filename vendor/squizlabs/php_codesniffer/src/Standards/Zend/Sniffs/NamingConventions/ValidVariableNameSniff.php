@@ -77,7 +77,7 @@ class ValidVariableNameSniff extends AbstractVariableSniff
             $objOperator = $phpcsFile->findPrevious([T_WHITESPACE], ($stackPtr - 1), null, true);
             if ($tokens[$objOperator]['code'] === T_DOUBLE_COLON) {
                 // The variable lives within a class, and is referenced like
-                // this: Resize::$_variable, so we don't know its scope.
+                // this: MyClass::$_variable, so we don't know its scope.
                 $inClass = true;
             } else {
                 $inClass = $phpcsFile->hasCondition($stackPtr, Tokens::$ooScopeTokens);

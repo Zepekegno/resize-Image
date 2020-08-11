@@ -535,7 +535,7 @@ class ErrorSuppressionTest extends TestCase
         $ruleset = new Ruleset($config);
 
         // Process without suppression.
-        $content = '<?php '.PHP_EOL.'class Resize() {'.PHP_EOL.'function myFunction() {'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
+        $content = '<?php '.PHP_EOL.'class MyClass() {'.PHP_EOL.'function myFunction() {'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
         $file    = new DummyFile($content, $ruleset, $config);
         $file->process();
 
@@ -545,7 +545,7 @@ class ErrorSuppressionTest extends TestCase
         $this->assertCount(0, $errors);
 
         // Process with suppression.
-        $content = '<?php '.PHP_EOL.'class Resize() {'.PHP_EOL.'//phpcs:disable'.PHP_EOL.'function myFunction() {'.PHP_EOL.'//phpcs:enable'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
+        $content = '<?php '.PHP_EOL.'class MyClass() {'.PHP_EOL.'//phpcs:disable'.PHP_EOL.'function myFunction() {'.PHP_EOL.'//phpcs:enable'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
         $file    = new DummyFile($content, $ruleset, $config);
         $file->process();
 
@@ -555,7 +555,7 @@ class ErrorSuppressionTest extends TestCase
         $this->assertCount(0, $errors);
 
         // Process with suppression.
-        $content = '<?php '.PHP_EOL.'class Resize() {'.PHP_EOL.'//@phpcs:disable'.PHP_EOL.'function myFunction() {'.PHP_EOL.'//@phpcs:enable'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
+        $content = '<?php '.PHP_EOL.'class MyClass() {'.PHP_EOL.'//@phpcs:disable'.PHP_EOL.'function myFunction() {'.PHP_EOL.'//@phpcs:enable'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
         $file    = new DummyFile($content, $ruleset, $config);
         $file->process();
 
@@ -565,7 +565,7 @@ class ErrorSuppressionTest extends TestCase
         $this->assertCount(0, $errors);
 
         // Process with suppression (deprecated syntax).
-        $content = '<?php '.PHP_EOL.'class Resize() {'.PHP_EOL.'//@codingStandardsIgnoreStart'.PHP_EOL.'function myFunction() {'.PHP_EOL.'//@codingStandardsIgnoreEnd'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
+        $content = '<?php '.PHP_EOL.'class MyClass() {'.PHP_EOL.'//@codingStandardsIgnoreStart'.PHP_EOL.'function myFunction() {'.PHP_EOL.'//@codingStandardsIgnoreEnd'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
         $file    = new DummyFile($content, $ruleset, $config);
         $file->process();
 
@@ -575,7 +575,7 @@ class ErrorSuppressionTest extends TestCase
         $this->assertCount(0, $errors);
 
         // Process with a docblock suppression.
-        $content = '<?php '.PHP_EOL.'class Resize() {'.PHP_EOL.'/** phpcs:disable */'.PHP_EOL.'function myFunction() {'.PHP_EOL.'/** phpcs:enable */'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
+        $content = '<?php '.PHP_EOL.'class MyClass() {'.PHP_EOL.'/** phpcs:disable */'.PHP_EOL.'function myFunction() {'.PHP_EOL.'/** phpcs:enable */'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
         $file    = new DummyFile($content, $ruleset, $config);
 
         $errors    = $file->getErrors();
@@ -584,7 +584,7 @@ class ErrorSuppressionTest extends TestCase
         $this->assertCount(0, $errors);
 
         // Process with a docblock @ suppression.
-        $content = '<?php '.PHP_EOL.'class Resize() {'.PHP_EOL.'/** @phpcs:disable */'.PHP_EOL.'function myFunction() {'.PHP_EOL.'/** @phpcs:enable */'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
+        $content = '<?php '.PHP_EOL.'class MyClass() {'.PHP_EOL.'/** @phpcs:disable */'.PHP_EOL.'function myFunction() {'.PHP_EOL.'/** @phpcs:enable */'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
         $file    = new DummyFile($content, $ruleset, $config);
 
         $errors    = $file->getErrors();
@@ -593,7 +593,7 @@ class ErrorSuppressionTest extends TestCase
         $this->assertCount(0, $errors);
 
         // Process with a docblock suppression (deprecated syntax).
-        $content = '<?php '.PHP_EOL.'class Resize() {'.PHP_EOL.'/** @codingStandardsIgnoreStart */'.PHP_EOL.'function myFunction() {'.PHP_EOL.'/** @codingStandardsIgnoreEnd */'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
+        $content = '<?php '.PHP_EOL.'class MyClass() {'.PHP_EOL.'/** @codingStandardsIgnoreStart */'.PHP_EOL.'function myFunction() {'.PHP_EOL.'/** @codingStandardsIgnoreEnd */'.PHP_EOL.'$this->foo();'.PHP_EOL.'}'.PHP_EOL.'}';
         $file    = new DummyFile($content, $ruleset, $config);
 
         $errors    = $file->getErrors();
@@ -668,7 +668,7 @@ class ErrorSuppressionTest extends TestCase
         $this->assertCount(0, $warnings);
 
         // Process late comment.
-        $content = '<?php '.PHP_EOL.'class Resize {}'.PHP_EOL.'$foo = new Resize()'.PHP_EOL.'// phpcs:ignoreFile';
+        $content = '<?php '.PHP_EOL.'class MyClass {}'.PHP_EOL.'$foo = new MyClass()'.PHP_EOL.'// phpcs:ignoreFile';
         $file    = new DummyFile($content, $ruleset, $config);
         $file->process();
 
@@ -678,7 +678,7 @@ class ErrorSuppressionTest extends TestCase
         $this->assertCount(0, $warnings);
 
         // Process late comment (deprecated syntax).
-        $content = '<?php '.PHP_EOL.'class Resize {}'.PHP_EOL.'$foo = new Resize()'.PHP_EOL.'// @codingStandardsIgnoreFile';
+        $content = '<?php '.PHP_EOL.'class MyClass {}'.PHP_EOL.'$foo = new MyClass()'.PHP_EOL.'// @codingStandardsIgnoreFile';
         $file    = new DummyFile($content, $ruleset, $config);
         $file->process();
 

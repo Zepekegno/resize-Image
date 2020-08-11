@@ -227,7 +227,7 @@ public function missingReturnType()
  * @param double  $a6 Comment here.
  * @param Myclass $a7 Comment here.
  *
- * @return int|object|double|float|array(int=>Resize)
+ * @return int|object|double|float|array(int=>MyClass)
  */
 public function caseSensitive($a1, $a2, $a3, arRay $a4, $a5, $a6, myclas $a7)
 {
@@ -243,7 +243,7 @@ public function caseSensitive($a1, $a2, $a3, arRay $a4, $a5, $a6, myclas $a7)
  * @param MyClass $a3 Comment here.
  * @param MyClass $a4 Comment here.
  *
- * @return array(int => Resize)
+ * @return array(int => MyClass)
  */
 public function typeHint(MyClass $a1, $a2, myclass $a3, $a4)
 {
@@ -272,7 +272,7 @@ public function mixedType($a1, $a2, $a3, $a4)
 /**
  * Array type.
  *
- * @param array(Resize)         $a1 OK.
+ * @param array(MyClass)         $a1 OK.
  * @param array()                $a2 Invalid type.
  * @param array(                 $a3 Typo.
  * @param array(int)             $a4 Use 'array(integer)' instead.
@@ -697,7 +697,7 @@ function yieldTest()
 /**
  * Using "array" as a type hint should satisfy a specified array parameter type.
  *
- * @param MyClass[] $values An array of Resize objects.
+ * @param MyClass[] $values An array of MyClass objects.
  *
  * @return void
  */
@@ -849,7 +849,7 @@ function returnTypeWithDescriptionB()
 /**
  * Return description function + lots of different mixed return types.
  *
- * @return int|object|string[]|real|double|float|bool|array(int=>Resize)|callable And here we have a description
+ * @return int|object|string[]|real|double|float|bool|array(int=>MyClass)|callable And here we have a description
  */
 function returnTypeWithDescriptionC()
 {
@@ -861,7 +861,7 @@ function returnTypeWithDescriptionC()
 /**
  * Return description function + lots of different mixed return types.
  *
- * @return array(int=>bool)|\OtherVendor\Package\SomeClass2|Resize[]|void And here we have a description
+ * @return array(int=>bool)|\OtherVendor\Package\SomeClass2|MyClass[]|void And here we have a description
  */
 function returnTypeWithDescriptionD()
 {
