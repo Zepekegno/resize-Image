@@ -1,6 +1,7 @@
 # Resize an Image
 
 [![Build Status](https://travis-ci.com/Zepekegno/Resize_Image.svg?branch=master)](https://travis-ci.com/Zepekegno/Resize_Image)
+[![Coverage Status](https://coveralls.io/repos/github/Zepekegno/Resize-Image/badge.svg?branch=master)](https://coveralls.io/github/Zepekegno/Resize-Image?branch=master)
 
  This resize class resize a PNG, JPG, JPEG, GIF image to a desired size using GD driver
 
