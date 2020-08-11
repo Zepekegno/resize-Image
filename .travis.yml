@@ -1,11 +1,11 @@
 Language: php
 
 php:
-  - 7.3
-  - 7.4
+  - '7.3.12'
+  - '7.4.0'
 
 matrix:
-  - php: 7.4
+  - php: '7.4.0'
 
 install:
   - composer self-update --preview
