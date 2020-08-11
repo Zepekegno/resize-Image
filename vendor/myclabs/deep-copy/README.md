@@ -165,8 +165,8 @@ The `PropertyMatcher` will match a specific property of a specific class:
 ```php
 use DeepCopy\Matcher\PropertyMatcher;
 
-// Will apply a filter to the property "id" of any objects of the class "Resize"
-$matcher = new PropertyMatcher('Resize', 'id');
+// Will apply a filter to the property "id" of any objects of the class "MyClass"
+$matcher = new PropertyMatcher('MyClass', 'id');
 ```
 
 
@@ -221,7 +221,7 @@ use DeepCopy\Filter\KeepFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 
 $copier = new DeepCopy();
-$copier->addFilter(new KeepFilter(), new PropertyMatcher('Resize', 'category'));
+$copier->addFilter(new KeepFilter(), new PropertyMatcher('MyClass', 'category'));
 
 $copy = $copier->copy($object);
 // $copy->category has not been touched
@@ -255,7 +255,7 @@ use DeepCopy\Filter\Doctrine\DoctrineEmptyCollectionFilter;
 use DeepCopy\Matcher\PropertyMatcher;
 
 $copier = new DeepCopy();
-$copier->addFilter(new DoctrineEmptyCollectionFilter(), new PropertyMatcher('Resize', 'myProperty'));
+$copier->addFilter(new DoctrineEmptyCollectionFilter(), new PropertyMatcher('MyClass', 'myProperty'));
 
 $copy = $copier->copy($object);
 
@@ -298,7 +298,7 @@ $copier = new DeepCopy();
 $callback = function ($currentValue) {
   return $currentValue . ' (copy)'
 };
-$copier->addFilter(new ReplaceFilter($callback), new PropertyMatcher('Resize', 'title'));
+$copier->addFilter(new ReplaceFilter($callback), new PropertyMatcher('MyClass', 'title'));
 
 $copy = $copier->copy($object);
 
@@ -316,11 +316,11 @@ $copier = new DeepCopy();
 $callback = function (MyClass $myClass) {
   return get_class($myClass);
 };
-$copier->addTypeFilter(new ReplaceFilter($callback), new TypeMatcher('Resize'));
+$copier->addTypeFilter(new ReplaceFilter($callback), new TypeMatcher('MyClass'));
 
 $copy = $copier->copy([new MyClass, 'some string', new MyClass]);
 
-// $copy will contain ['Resize', 'some string', 'Resize']
+// $copy will contain ['MyClass', 'some string', 'MyClass']
 ```
 
 
