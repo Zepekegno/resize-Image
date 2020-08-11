@@ -12,6 +12,6 @@ install:
   - composer install
 
 script:
-  - ./vendor/bien/php-cs-fixer fix -s
-  - ./vendor/bien/php-cs-fixer fix --diff --dry-run
-  - ./vendor/bien/phpunit --colors --coverage-text
+  - ./vendor/bin/php-cs-fixer fix -s
+  - ./vendor/bin/php-cs-fixer fix --diff --dry-run
+  - ./vendor/bin/phpunit --colors --coverage-text
