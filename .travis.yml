@@ -8,7 +8,7 @@ matrix:
   - php: 7.4
 
 install:
-  - composer self-update
+  - composer self-update --preview
   - composer install
 
 script:
