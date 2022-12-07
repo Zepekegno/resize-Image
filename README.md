@@ -4,32 +4,69 @@
 [![Coverage Status](https://coveralls.io/repos/github/Zepekegno/Resize-Image/badge.svg?branch=master)](https://coveralls.io/github/Zepekegno/Resize-Image?branch=master)
 
 
- This resize class resize a PNG, JPG, JPEG, GIF image to a desired size using GD driver
+ This Library will help you to convert easily and image into other format. this library use GD driver.
+ PHP version supported *8
+ What we can do with this library ?
+ - We can convert an image into another format.
+ - We can resize an image to another format.
+ - We can convert and resize an image to another format simultaneously.
+
+ Format supported for resizing : PNG, JPEG, JPG, GIF
+ Format supported for conversion : PNG, JPEG, JPG
 
 ```php
 
 //Resize an image
+
+// Example with png
 $source = 'image.png';
-$resizeImage = new zepekegno\resize_image\Resize($source,150,150);
 
-//if delete is false and file exist no delete it, it will be copy with old filename 
-$resizeImage->make('tmp/final',9);
+$resizeImage = new zepekegno\Image\Resize($source,50,50);
 
-//if delete is true and file exist delete it and create filename
-$resizeImage->make('tmp/final',9,true);
+
+/**
+ * If file exist a copy of this file will be created with suffix cpr
+*/
+$resizeImage->make(target:'tmp/final',quality:9);
+
+//if delete is true will delete this file and create a new file
+$resizeImage->make(target:'tmp/final',quality:9,delete:true);
+
+// Example with Gif
+
+$source = 'image.gif';
+
+$resizeImage = new zepekegno\Image\Resize($source,50,50);
+
+/**
+ * If file exist a copy of this file will be created with suffix cpr
+*/
+$resizeImage->make('tmp/final');
+
+//if delete is true will delete this file and create a new file
+$resizeImage->make(target:'tmp/final',delete:true);
 
 //Convert an image to other format 
+/**
+ * convert image png to jpeg
+ * Return the path of image
+*/
 $source = 'image.png';
-$convertImage = new zepekegno\resize_image\Resize($source,150,150);
-$convertImage->convert('jpeg','tmp/final',100,false);
+$convertImage = new zepekegno\Image\Resize(source:$source,height:50,width:50);
+$convertImage->convert(type:'jpeg',target:'tmp/final',quality:100,isResizable:false);
 
-//Convert an image to other format and resize this
+/**
+ * Convert png to jpeg and resize it
+ * if we want to resize, past isResizable to true
+ * Return the path of image
+*/
 $source = 'image.png';
-$convertImage = new zepekegno\resize_image\Resize($source,150,150);
-$img = $convertImage->convert('jpeg','tmp/final',100,true);
+$convertImage = new zepekegno\Image\Resize(source:$source,height:50,width:50);
+$img = $convertImage->convert(type:'jpeg',target:'tmp/final',quality:100,isResizable:true);
 
 // Generate image
 $image = "<img src=\"{$img}\"/>";
+
 
 ```
 
@@ -48,7 +85,7 @@ The make method which needs the following parameters
 
 - $quality **int**, the quality of the image will be use for png [0-9], jpeg or png [0-100], gif are not need
 
-- $delete **bool*, Optional, true delete the file if exist else it will be copy
+- $delete **bool*, Optional, true delete the file if exist else it will be copied into a new file prepend with **cpr*
 
 The convert method which needs the following parameters
 
@@ -58,4 +95,6 @@ The convert method which needs the following parameters
 
 - $quality **int**, the quality of the image will be use for png [0-9], jpeg or png [0-100], gif are not need
 
-- $size **bool**, Optional, true convert and resize the image, false convert only the image
+- $isResizable **bool**, Optional, true convert and resize the image, false convert only the image
+
+The support conversion for Gif is'nt available 

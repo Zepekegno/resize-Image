@@ -1,6 +1,6 @@
 <?php
 
-namespace zepekegno\resize_image;
+namespace Zepekegno;
 
 class ResizeQualityException extends \Exception
 {

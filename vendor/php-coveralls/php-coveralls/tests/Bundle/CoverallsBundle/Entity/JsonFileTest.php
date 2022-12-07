@@ -24,13 +24,6 @@ class JsonFileTest extends ProjectTestCase
      */
     private $object;
 
-    protected function setUp()
-    {
-        $this->setUpDir(realpath(__DIR__ . '/../../..'));
-
-        $this->object = new JsonFile();
-    }
-
     // hasSourceFile()
     // getSourceFile()
 
@@ -200,6 +193,40 @@ class JsonFileTest extends ProjectTestCase
         $obj = $this->object->setRepoToken($expected);
 
         $this->assertSame($expected, $this->object->getRepoToken());
+        $this->assertSame($obj, $this->object);
+
+        return $this->object;
+    }
+
+    // setParallel()
+
+    /**
+     * @test
+     */
+    public function shouldSetParallel()
+    {
+        $expected = true;
+
+        $obj = $this->object->setParallel($expected);
+
+        $this->assertSame($expected, $this->object->getParallel());
+        $this->assertSame($obj, $this->object);
+
+        return $this->object;
+    }
+
+    // setFlagName()
+
+    /**
+     * @test
+     */
+    public function shouldSetFlagName()
+    {
+        $expected = 'php-7.4';
+
+        $obj = $this->object->setFlagName($expected);
+
+        $this->assertSame($expected, $this->object->getFlagName());
         $this->assertSame($obj, $this->object);
 
         return $this->object;
@@ -379,6 +406,28 @@ class JsonFileTest extends ProjectTestCase
         $this->assertSame(json_encode($expected), (string) $object);
     }
 
+    // parallel
+
+    /**
+     * @test
+     * @depends shouldSetParallel
+     *
+     * @param mixed $object
+     */
+    public function shouldConvertToArrayWithParallel($object)
+    {
+        $item = true;
+
+        $expected = [
+            'parallel' => $item,
+            'source_files' => [],
+            'environment' => ['packagist_version' => Version::VERSION],
+        ];
+
+        $this->assertSame($expected, $object->toArray());
+        $this->assertSame(json_encode($expected), (string) $object);
+    }
+
     // git
 
     /**
@@ -434,10 +483,12 @@ class JsonFileTest extends ProjectTestCase
     {
         $serviceName = 'travis-ci';
         $serviceJobId = '1.1';
+        $serviceBuild = 123;
 
         $env = [];
         $env['CI_NAME'] = $serviceName;
         $env['CI_JOB_ID'] = $serviceJobId;
+        $env['CI_BUILD_NUMBER'] = $serviceBuild;
 
         $object = $this->collectJsonFile();
 
@@ -446,6 +497,7 @@ class JsonFileTest extends ProjectTestCase
         $this->assertSame($same, $object);
         $this->assertSame($serviceName, $object->getServiceName());
         $this->assertSame($serviceJobId, $object->getServiceJobId());
+        $this->assertSame($serviceBuild, $object->getServiceNumber());
     }
 
     /**
@@ -486,6 +538,7 @@ class JsonFileTest extends ProjectTestCase
          */
 
         $repoToken = 'token';
+        $parallel = true;
         $serviceName = 'codeship';
         $serviceNumber = '108821';
         $serviceBuildUrl = 'https://www.codeship.io/projects/2777/builds/108821';
@@ -494,6 +547,7 @@ class JsonFileTest extends ProjectTestCase
 
         $env = [];
         $env['COVERALLS_REPO_TOKEN'] = $repoToken;
+        $env['COVERALLS_PARALLEL'] = $parallel;
         $env['CI_NAME'] = $serviceName;
         $env['CI_BUILD_NUMBER'] = $serviceNumber;
         $env['CI_BUILD_URL'] = $serviceBuildUrl;
@@ -506,6 +560,7 @@ class JsonFileTest extends ProjectTestCase
 
         $this->assertSame($same, $object);
         $this->assertSame($repoToken, $object->getRepoToken());
+        $this->assertSame($parallel, $object->getParallel());
         $this->assertSame($serviceName, $object->getServiceName());
         $this->assertSame($serviceNumber, $object->getServiceNumber());
         $this->assertSame($serviceBuildUrl, $object->getServiceBuildUrl());
@@ -542,6 +597,29 @@ class JsonFileTest extends ProjectTestCase
     /**
      * @test
      */
+    public function shouldFillJobsForGithubActions()
+    {
+        $repoToken = 'token';
+        $serviceName = 'github';
+        $serviceJobId = '1.1';
+
+        $env = [];
+        $env['CI_NAME'] = $serviceName;
+        $env['CI_JOB_ID'] = $serviceJobId;
+        $env['COVERALLS_REPO_TOKEN'] = $repoToken;
+
+        $object = $this->collectJsonFile();
+
+        $same = $object->fillJobs($env);
+
+        $this->assertSame($same, $object);
+        $this->assertSame($serviceName, $object->getServiceName());
+        $this->assertSame($serviceJobId, $object->getServiceJobId());
+    }
+
+    /**
+     * @test
+     */
     public function shouldFillJobsForUnsupportedJob()
     {
         $repoToken = 'token';
@@ -559,10 +637,11 @@ class JsonFileTest extends ProjectTestCase
 
     /**
      * @test
-     * @expectedException \PhpCoveralls\Bundle\CoverallsBundle\Entity\Exception\RequirementsNotSatisfiedException
      */
     public function throwRuntimeExceptionOnFillingJobsIfInvalidEnv()
     {
+        $this->expectException(\PhpCoveralls\Bundle\CoverallsBundle\Entity\Exception\RequirementsNotSatisfiedException::class);
+
         $env = [];
 
         $object = $this->collectJsonFile();
@@ -572,12 +651,14 @@ class JsonFileTest extends ProjectTestCase
 
     /**
      * @test
-     * @expectedException \RuntimeException
      */
     public function throwRuntimeExceptionOnFillingJobsWithoutSourceFiles()
     {
+        $this->expectException(\RuntimeException::class);
+
         $env = [];
         $env['TRAVIS'] = true;
+        $env['TRAVIS_BUILD_NUMBER'] = '123';
         $env['TRAVIS_JOB_ID'] = '1.1';
 
         $object = $this->collectJsonFileWithoutSourceFiles();
@@ -641,6 +722,13 @@ class JsonFileTest extends ProjectTestCase
         $this->assertContains('test2.php', $filenames);
         $this->assertNotContains('TestInterface.php', $filenames);
         $this->assertNotContains('AbstractClass.php', $filenames);
+    }
+
+    protected function legacySetUp()
+    {
+        $this->setUpDir(realpath(__DIR__ . '/../../..'));
+
+        $this->object = new JsonFile();
     }
 
     /**

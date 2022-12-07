@@ -7,22 +7,22 @@ use PhpCoveralls\Bundle\CoverallsBundle\Entity\Git\Commit;
 use PhpCoveralls\Bundle\CoverallsBundle\Entity\Git\Git;
 use PhpCoveralls\Bundle\CoverallsBundle\Entity\Git\Remote;
 use PhpCoveralls\Component\System\Git\GitCommand;
-use PHPUnit\Framework\TestCase;
+use PhpCoveralls\Tests\ProjectTestCase;
 
 /**
  * @covers \PhpCoveralls\Bundle\CoverallsBundle\Collector\GitInfoCollector
  *
  * @author Kitamura Satoshi <with.no.parachute@gmail.com>
  */
-class GitInfoCollectorTest extends TestCase
+class GitInfoCollectorTest extends ProjectTestCase
 {
     /**
      * @var array
      */
     private $getBranchesValue = [
         '  master',
-        '* branch1',
-        '  branch2',
+        '* branch-1',
+        '  branch-2',
     ];
 
     /**
@@ -72,13 +72,51 @@ class GitInfoCollectorTest extends TestCase
 
         $this->assertInstanceOf(Git::class, $git);
         $this->assertGit($git);
+        $this->assertSame('branch-1', $git->getBranch());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCollectDetachedRef()
+    {
+        $gitCommand = $this->createGitCommandStubWith(
+            ['* (HEAD detached at pull/1/merge)'],
+            $this->getHeadCommitValue,
+            $this->getRemotesValue
+        );
+        $object = new GitInfoCollector($gitCommand);
+
+        $git = $object->collect();
+
+        $this->assertInstanceOf(Git::class, $git);
+        $this->assertGit($git);
+        $this->assertSame('pull/1/merge', $git->getBranch());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCollectNoBranch()
+    {
+        $gitCommand = $this->createGitCommandStubWith(
+            ['* (no branch)'],
+            $this->getHeadCommitValue,
+            $this->getRemotesValue
+        );
+        $object = new GitInfoCollector($gitCommand);
+
+        $git = $object->collect();
+
+        $this->assertInstanceOf(Git::class, $git);
+        $this->assertGit($git);
+        $this->assertSame('(no branch)', $git->getBranch());
     }
 
     // collectBranch() exception
 
     /**
      * @test
-     * @expectedException \RuntimeException
      */
     public function throwRuntimeExceptionIfCurrentBranchNotFound()
     {
@@ -89,6 +127,7 @@ class GitInfoCollectorTest extends TestCase
 
         $object = new GitInfoCollector($gitCommand);
 
+        $this->expectException(\RuntimeException::class);
         $object->collect();
     }
 
@@ -96,7 +135,6 @@ class GitInfoCollectorTest extends TestCase
 
     /**
      * @test
-     * @expectedException \RuntimeException
      */
     public function throwRuntimeExceptionIfHeadCommitIsInvalid()
     {
@@ -105,6 +143,7 @@ class GitInfoCollectorTest extends TestCase
 
         $object = new GitInfoCollector($gitCommand);
 
+        $this->expectException(\RuntimeException::class);
         $object->collect();
     }
 
@@ -112,7 +151,6 @@ class GitInfoCollectorTest extends TestCase
 
     /**
      * @test
-     * @expectedException \RuntimeException
      */
     public function throwRuntimeExceptionIfRemoteIsInvalid()
     {
@@ -121,6 +159,7 @@ class GitInfoCollectorTest extends TestCase
 
         $object = new GitInfoCollector($gitCommand);
 
+        $this->expectException(\RuntimeException::class);
         $object->collect();
     }
 
@@ -233,8 +272,6 @@ class GitInfoCollectorTest extends TestCase
 
     protected function assertGit(Git $git)
     {
-        $this->assertSame('branch1', $git->getBranch());
-
         $commit = $git->getHead();
 
         $this->assertInstanceOf(Commit::class, $commit);

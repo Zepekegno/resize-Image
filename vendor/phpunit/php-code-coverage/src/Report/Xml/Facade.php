@@ -13,11 +13,11 @@ use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
 use function count;
 use function dirname;
-use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function is_array;
 use function is_dir;
+use function is_file;
 use function is_writable;
 use function libxml_clear_errors;
 use function libxml_get_errors;
@@ -28,19 +28,16 @@ use function substr;
 use DateTimeImmutable;
 use DOMDocument;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use SebastianBergmann\CodeCoverage\Directory as DirectoryUtil;
 use SebastianBergmann\CodeCoverage\Driver\PathExistsButIsNotDirectoryException;
 use SebastianBergmann\CodeCoverage\Driver\WriteOperationFailedException;
 use SebastianBergmann\CodeCoverage\Node\AbstractNode;
 use SebastianBergmann\CodeCoverage\Node\Directory as DirectoryNode;
 use SebastianBergmann\CodeCoverage\Node\File as FileNode;
+use SebastianBergmann\CodeCoverage\Util\Filesystem as DirectoryUtil;
 use SebastianBergmann\CodeCoverage\Version;
 use SebastianBergmann\CodeCoverage\XmlException;
 use SebastianBergmann\Environment\Runtime;
 
-/**
- * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
- */
 final class Facade
 {
     /**
@@ -102,7 +99,7 @@ final class Facade
      */
     private function initTargetDirectory(string $directory): void
     {
-        if (file_exists($directory)) {
+        if (is_file($directory)) {
             if (!is_dir($directory)) {
                 throw new PathExistsButIsNotDirectoryException($directory);
             }
@@ -112,7 +109,7 @@ final class Facade
             }
         }
 
-        DirectoryUtil::create($directory);
+        DirectoryUtil::createDirectory($directory);
     }
 
     /**
@@ -243,9 +240,9 @@ final class Facade
         $loc = $node->linesOfCode();
 
         $totals->setNumLines(
-            $loc->linesOfCode(),
-            $loc->commentLinesOfCode(),
-            $loc->nonCommentLinesOfCode(),
+            $loc['linesOfCode'],
+            $loc['commentLinesOfCode'],
+            $loc['nonCommentLinesOfCode'],
             $node->numberOfExecutableLines(),
             $node->numberOfExecutedLines()
         );

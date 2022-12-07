@@ -1,11 +1,19 @@
 <?php
 
-namespace zepekegno\resize_image;
+namespace Zepekegno;
+use \Exception;
+use \GdImage;
+use Zepekegno\Exception\ReadableException;
+use Zepekegno\Exception\TypeException;
+use Zepekegno\ResizeInterface;
+use Zepekegno\ResizeQualityException;
 
 /**
  * Class Resize.
+ * @author Moussa Traoré <moussatraore158@gmail.com>
+ * @copyright 2022 zepekegno224
  */
-class Resize
+class Resize implements ResizeInterface
 {
     /**
      * height of new file.
@@ -43,44 +51,57 @@ class Resize
     protected $source;
 
     /**
-     * Resize constructor.
-     *
-     * @throws \Exception
+     * Path of final image
+     * @var null|string
      */
-    public function __construct(string $source, int $height, int $width)
+    protected string $file;
+
+   
+    /**
+     * @param string $source
+     * @param int|null $height=0
+     * @param int|null $width=0
+     * @throws null|Exception|TypeException
+     */
+    public function __construct(string $source, ?int $height=0, ?int $width=0)
     {
         $this->source = $source;
         $this->height = $height;
         $this->width = $width;
+        $this->testFileExist($source);
         $this->testSource($source);
     }
 
     /** Test if the file is an image.
-     * @throws \Exception
+     * @param string source
+     * @throws null|Exception|TypeException
      */
-    public function testSource(string $source): ?\Exception
+    public function testSource(string $source)
     {
-        $this->testFileExist($source);
         if (false === getimagesize($source)) {
-            throw new \Exception(sprintf('This file can\'t  be read %s', $source));
+            throw new ReadableException(sprintf('An error occur'));
         }
 
         $file = getimagesize($source);
-        $mimeType = mb_substr($file['mime'], 0, 6);
+        $mimeType = substr($file['mime'], 0, 6);
         if ('image/' === !$mimeType) {
-            throw new \Exception(sprintf('This file must be an image %s', $source));
+            throw new TypeException(sprintf('This file must be an image %s', $source));
         }
         list($this->oldWidth, $this->oldHeight) = $file;
-
-        return null;
     }
 
-    /** Resize an image.
+    
+    /**
+     * Apply resizing of an image
+     * @param string $target
+     * @param mixed $quality
+     * @param bool $delete
      * @throws ResizeQualityException
+     * @return string|null
      */
-    public function make(string $target, int $quality, bool $delete = false): ?string
+    public function make(string $target, mixed $quality = -1, $delete=false): ?string
     {
-        $this->testQuality($this->source, $quality);
+       if($quality != -1) $this->testQuality($this->source, $quality);
 
         $extension = pathinfo($this->source, PATHINFO_EXTENSION);
         $basename = pathinfo($this->source, PATHINFO_BASENAME);
@@ -89,30 +110,43 @@ class Resize
             mkdir($target, 0777, true);
         }
 
-        $target .= '/' . $basename;
+        
+        $file = $target.'/' . $basename;
 
-        if (file_exists($target)) {
-            if ($delete) {
-                unlink($target);
-            } else {
-                copy($target, $target);
-            }
-        }
-        $bool = $this->switch($extension, $this->source, $target, $quality, $this->width, $this->height);
-        if (!$bool) {
-            new MakeException(printf("This file %s extension {%s} is'nt supported ", $this->source, $extension));
+        if (file_exists($file) && !$delete) {
+            $file = $target .DIRECTORY_SEPARATOR .'cpr-'.uniqid().'-'. $basename;
         }
 
-        return $target;
+        if(file_exists($file) && $delete){
+            unlink($file);
+        }
+
+        $this->matchType($extension, $this->source, $file, $this->width, $this->height,$quality);
+
+        return $file;
+      
     }
 
-    /** Convert an image to other format or convert and resize to other format.
+    
+    /** Convert an image to other format or 
+     * convert and resize to other format.
      * @throws ResizeQualityException
+     * @param string $type
+     * @param string $target
+     * @param int|null $quality
+     * @param bool $isResizable
+     * @param string|null $name
+     * @param bool $old
+     * 
+     * @return string|null
      */
-    public function convert(string $type, string $target, int $quality, bool $size = false): string
+    public function convert(string $type, string $target, ?int $quality = null ,bool $isResizable = false,?string $name = null,bool $old = false): ?string
     {
         $extension = pathinfo($this->source, PATHINFO_EXTENSION);
         $filename = pathinfo($this->source, PATHINFO_FILENAME);
+
+        if ($extension == 'gif')
+            throw new TypeException('Sorry convert for Gif not supported');
 
         if (!file_exists($target)) {
             mkdir($target, 0777, true);
@@ -120,185 +154,199 @@ class Resize
 
         $file = $target . '/' . $filename . '.' . $type;
 
-        if (file_exists($file)) {
-            $target .= '/copy_' . $filename . '.' . $type;
-        } else {
-            $target .= '/' . $filename . '.' . $type;
-        }
-        if ('jpg' === mb_strtolower($extension)) {
-            $createImage = 'imagecreatefromjpeg';
-        } else {
-            $createImage = 'imagecreatefrom' . $extension;
-        }
+        $tmp = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $filename.'.' .$type;
+
+        if (file_exists($file) && $old) {
+            copy($file, $tmp);
+            unlink($file);
+        } 
+
+        if (file_exists($file) && !$old) {
+            copy($file, $tmp);
+            $file =  $target . DIRECTORY_SEPARATOR.'cp-'.$filename . '.' . $type;
+            $tmp = sys_get_temp_dir() . DIRECTORY_SEPARATOR.'cp-'.$filename.'.' .$type;
+        } 
+
+        if (file_exists($file) && !$old && $name != null) {
+            copy($file, $tmp);
+            $file =  $target . '/' . $name. '.' . $type;
+            $tmp = sys_get_temp_dir(). DIRECTORY_SEPARATOR.$name.'.'.$type;
+        } 
+        
+        $createImage =  ('jpg' === strtolower($extension)) ?'imagecreatefromjpeg':'imagecreatefrom' . $extension;
 
         $src = $createImage($this->source);
 
         $dest = imagecreatetruecolor($this->oldWidth, $this->oldHeight);
+
         imagecopy($dest, $src, 0, 0, 0, 0, $this->oldWidth, $this->oldHeight);
-        if ('jpg' === mb_strtolower($type) || 'jpeg' === mb_strtolower($type)) {
-            $image = $image = 'imagejpeg';
-        } else {
-            $image = 'image' . $type;
+
+        $image = ('jpg' === strtolower($type) || 'jpeg' === strtolower($type)) ? 'imagejpeg' : 'image' . $type;
+
+        $fileQuality =  ('imagepng' === $image) ? $fileQuality = 9 :
+                        $fileQuality = 100;
+
+        $image($dest, $tmp, $fileQuality);
+
+        
+
+        if($isResizable){
+            $this->source = $tmp;
+            $file = $this->make($target, $quality);
+            return $this->file =  $file;
         }
 
-        if ('imagepng' === $image) {
-            $fileQuality = 9;
-        }
-        if ('imagejpeg' === $image) {
-            $fileQuality = 100;
-        }
-
-        $image($dest, $target, $fileQuality);
-
-        // if size equal true resize an image with new extension
-
-        if ($size) {
-            $dirname = pathinfo($target, PATHINFO_DIRNAME);
-            $target = (new self($target, $this->width, $this->height))->make($dirname, $quality);
-        }
-
-        return $target;
+        copy($tmp, $file);
+        unlink($tmp);
+        return $this->file =  $file;
     }
 
-    /** Create a resource png for an image.
-     * @return false|resource
-     */
-    private function createPng(string $sources, int $width, int $height)
-    {
-        $source = imagecreatefrompng($sources);
-
-        $final = imagecreatetruecolor($width, $height);
-
-        imagecopyresampled(
-            $final,
-            $source,
-            0,
-            0,
-            0,
-            0,
-            $this->width,
-            $this->height,
-            $this->oldWidth,
-            $this->oldHeight
-        );
-
-        return $final;
-    }
-
-    /** Create a resource jpeg|jpg for an image.
-     * @return false|resource
-     */
-    private function createJpeg(string $sources, int $width, int $height)
-    {
-        $source = imagecreatefromjpeg($sources);
-
-        $final = imagecreatetruecolor($width, $height);
-
-        imagecopyresampled(
-            $final,
-            $source,
-            0,
-            0,
-            0,
-            0,
-            $this->width,
-            $this->height,
-            $this->oldWidth,
-            $this->oldHeight
-        );
-
-        return $final;
-    }
-
-    /** Create a resource gif for an image.
-     * @return false|resource
-     */
-    private function createGif(string $sources, int $width, int $height)
-    {
-        $source = imagecreatefromgif($sources);
-
-        $final = imagecreatetruecolor($width, $height);
-
-        imagecopyresampled(
-            $final,
-            $source,
-            0,
-            0,
-            0,
-            0,
-            $this->width,
-            $this->height,
-            $this->oldWidth,
-            $this->oldHeight
-        );
-
-        return $final;
-    }
-
+  
     /**
-     * Verify if file exists.
-     *
-     * @throws \Exception
+     * @param string $file
+     * @throws Exception
      */
     private function testFileExist(string $file)
     {
         if (!file_exists($file)) {
-            throw new \Exception(printf('No such file or directory : %s', $file));
-            exit();
+            throw new Exception(printf('No such file or directory : %s', $file));
         }
     }
 
-    /** Create and stored the image in the target.
+    /**
+     * @param string $extension
+     * @param string $source
+     * @param string $target
+     * @param int $width
+     * @param int $height
+     * @param int|null $quality
+     * @throws TypeException
+     * 
+     * @return void
+     */
+    public function matchType(string $extension, string $source,string $target, int $width, int $height, int $quality=-1) : void{
+
+        match($extension){
+            'png'=> $this->png($source,$target,$width,$height,$quality),
+            'gif'=> $this->gif($source,$target,$width,$height),
+            'jpeg'=>  $this->jpeg($source,$target,$width,$height,$quality),
+            'jpg'=>  $this->jpeg($source,$target,$width,$height,$quality),
+            'default'=>
+                throw new TypeException(printf("This file %s extension {%s} is'nt supported ", 
+                                        $this->source, $extension))
+
+        };
+    }
+
+    /**
+     * @param string $sources
+     * @param string $target
+     * @param int $width
+     * @param int $height
+     * @param int $quality
+     * 
+     * @return void
+     */
+    public function png(string $sources, string $target, int $width, int $height, int $quality):void{
+        $source = imagecreatefrompng($sources);
+
+        $final = imagecreatetruecolor($width, $height);
+
+        $this->imageSampled($final,$source);
+
+         imagepng($final, $target, $quality);
+
+        $this->file = $target;
+    }
+
+    /**
+     * @param string $sources
+     * @param string $target
+     * @param int $width
+     * @param int $height
+     * 
+     * @return void
+     */
+    public function gif(string $sources, string $target, int $width, int $height):void{
+        $source = imagecreatefromgif($sources);
+
+        $final = imagecreatetruecolor($width, $height);
+
+        $this->imageSampled($final,$source);
+
+        imagegif($final, $target);
+
+        $this->file = $target;
+    }
+
+   
+   
+    /**
+     * @param string $sources
+     * @param string $target
+     * @param int $width
+     * @param int $height
+     * @param int $quality
+     * 
+     * @return void
+     */
+    protected function jpeg(string $sources, string $target, int $width, int $height, int $quality): void{
+
+        $source = imagecreatefromjpeg($sources);
+
+        $final = imagecreatetruecolor($width, $height);
+
+        $this->imageSampled($final,$source);
+
+        imagejpeg($final, $target, $quality);
+        
+        $this->file = $target;
+    }
+
+    /**
+     * @param mixed $final
+     * @param mixed $source
+     * 
      * @return bool
      */
-    private function switch(string $extension, string $source, string $target, int $quality, int $width, int $height)
-    {
-        switch ($extension) {
-            case 'png':
-                $img = $this->createPng($source, $width, $height);
-                imagepng($img, $target, $quality);
-
-                return true;
-                break;
-            case 'jpeg':
-                $img = $this->createJpeg($source, $width, $height);
-                imagejpeg($img, $target, $quality);
-
-                return true;
-                break;
-            case 'gif':
-                $img = $this->createGif($source, $width, $height);
-                imagegif($img, $target);
-
-                return true;
-                break;
-            default:
-                $img = $this->createJpeg($source, $width, $height);
-                imagejpeg($img, $target, $quality);
-
-                return true;
-        }
+    private function imageSampled($final,$source) :bool{
+        return imagecopyresampled(
+                $final,
+                $source,
+                0,
+                0,
+                0,
+                0,
+                $this->width,
+                $this->height,
+                $this->oldWidth,
+                $this->oldHeight
+        );
     }
 
-    /** Test the quality compression level png[0-9], jpeg|jpg[0-100].
+ 
+    /** 
+     * Test the quality compression level png[0-9], jpeg|jpg[0-100].
      * @throws ResizeQualityException
+     * 
+     * @param string $sources
+     * @param int $quality
+     * 
+     * @return void
      */
-    private function testQuality(string $sources, int $quality)
+    private function testQuality(string $sources, int $quality):void
     {
-        $extension = mb_strtolower(pathinfo($sources, PATHINFO_EXTENSION));
-        $compressPng = range(0, 9, 1);
-        $compressJpeg = range(0, 100, 1);
-        if ('png' === $extension) {
-            if (!\in_array($quality, $compressPng, true)) {
-                throw new ResizeQualityException(printf('compression level for png must be 0 through 9', $extension));
-            }
+        $extension = strtolower(pathinfo($sources, PATHINFO_EXTENSION));
+        $compressPng = range(1, 9, 1);
+        $compressJpeg = range(1, 100, 1);
+    
+        if (('png' === $extension) && !in_array($quality,$compressPng) ) {
+            throw new ResizeQualityException(printf('compression level for %s must be 0 through 9', $extension));
         }
 
-        if ('jpeg' === $extension
-            || 'jpg' === $extension) {
-            if (!\in_array($quality, $compressJpeg, true)) {
-                throw new ResizeQualityException(printf('compression level for png must be 0 through 100', $extension));
-            }
+        if (('jpeg' === $extension
+            || 'jpg' === $extension) && !in_array($quality, $compressJpeg)) {
+                throw new ResizeQualityException(printf('compression level for %s must be 0 through 100', $extension));
         }
     }
 }

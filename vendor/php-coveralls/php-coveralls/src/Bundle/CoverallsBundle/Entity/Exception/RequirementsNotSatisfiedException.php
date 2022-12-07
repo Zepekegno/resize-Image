@@ -53,12 +53,13 @@ Set environment variables properly like the following.
 For Travis users:
 
   - TRAVIS
+  - TRAVIS_BUILD_NUMBER
   - TRAVIS_JOB_ID
 
 For CircleCI users:
 
   - CIRCLECI
-  - CIRCLE_BUILD_NUM
+  - CIRCLE_WORKFLOW_ID
   - COVERALLS_REPO_TOKEN
 
 For Jenkins users:
@@ -71,6 +72,13 @@ For AppVeyor users:
 
   - APPVEYOR
   - APPVEYOR_BUILD_NUMBER
+
+For Github Actions users:
+  - GITHUB_REF
+  - GITHUB_ACTIONS
+  - GITHUB_RUN_ID
+  - GITHUB_EVENT_NAME
+  - COVERALLS_REPO_TOKEN
 
 From local environment:
 

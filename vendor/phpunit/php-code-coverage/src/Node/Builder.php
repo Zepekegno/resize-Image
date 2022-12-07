@@ -15,14 +15,14 @@ use function basename;
 use function count;
 use function dirname;
 use function explode;
-use function file_exists;
 use function implode;
+use function is_file;
 use function str_replace;
 use function strpos;
 use function substr;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\ProcessedCodeCoverageData;
-use SebastianBergmann\CodeCoverage\StaticAnalysis\CoveredFileAnalyser;
+use SebastianBergmann\CodeCoverage\StaticAnalysis\FileAnalyser;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
@@ -30,13 +30,13 @@ use SebastianBergmann\CodeCoverage\StaticAnalysis\CoveredFileAnalyser;
 final class Builder
 {
     /**
-     * @var CoveredFileAnalyser
+     * @var FileAnalyser
      */
-    private $coveredFileAnalyser;
+    private $analyser;
 
-    public function __construct(CoveredFileAnalyser $coveredFileAnalyser)
+    public function __construct(FileAnalyser $analyser)
     {
-        $this->coveredFileAnalyser = $coveredFileAnalyser;
+        $this->analyser = $analyser;
     }
 
     public function build(CodeCoverage $coverage): Directory
@@ -66,7 +66,7 @@ final class Builder
                 $key      = substr($key, 0, -2);
                 $filename = $root->pathAsString() . DIRECTORY_SEPARATOR . $key;
 
-                if (file_exists($filename)) {
+                if (is_file($filename)) {
                     $root->addFile(
                         new File(
                             $key,
@@ -74,10 +74,10 @@ final class Builder
                             $value['lineCoverage'],
                             $value['functionCoverage'],
                             $tests,
-                            $this->coveredFileAnalyser->classesIn($filename),
-                            $this->coveredFileAnalyser->traitsIn($filename),
-                            $this->coveredFileAnalyser->functionsIn($filename),
-                            $this->coveredFileAnalyser->linesOfCodeFor($filename)
+                            $this->analyser->classesIn($filename),
+                            $this->analyser->traitsIn($filename),
+                            $this->analyser->functionsIn($filename),
+                            $this->analyser->linesOfCodeFor($filename)
                         )
                     );
                 }

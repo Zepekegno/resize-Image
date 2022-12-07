@@ -73,10 +73,17 @@ class GitInfoCollector
         $branchesResult = $this->command->getBranches();
 
         foreach ($branchesResult as $result) {
-            if (strpos($result, '* ') === 0) {
-                $exploded = explode('* ', $result, 2);
+            if ($result === '* (no branch)') {
+                // Case detected on Travis PUSH hook for tags, can be reporduced by following command:
+                // $ git clone --depth=1 --branch=v2.4.0 https://github.com/php-coveralls/php-coveralls.git php-coveralls && cd php-coveralls && git branch
+                // * (no branch)
+                return '(no branch)';
+            }
 
-                return $exploded[1];
+            if (strpos($result, '* ') === 0) {
+                preg_match('/^\* (?:\(HEAD detached at )?([\w\/\-]+)\)?/', $result, $matches);
+
+                return $matches[1];
             }
         }
 

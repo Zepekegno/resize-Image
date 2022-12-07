@@ -1,17 +1,14 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<phpunit bootstrap="./vendor/autoload.php" colors="true">
-
-    <testsuites>
-        <testsuite name="Resize Image">
-            <directory suffix=".php">tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory suffix=".php">src/</directory>
-            <directory suffix=".php">tests/</directory>
-        </whitelist>
-    </filter>
-
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="./vendor/autoload.php" colors="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage>
+    <include>
+      <directory suffix=".php">src/</directory>
+      <directory suffix=".php">tests/</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="Resize Image">
+      <directory suffix=".php">tests</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

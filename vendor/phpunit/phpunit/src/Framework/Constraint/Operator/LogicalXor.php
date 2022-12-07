@@ -12,6 +12,9 @@ namespace PHPUnit\Framework\Constraint;
 use function array_reduce;
 use function array_shift;
 
+/**
+ * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
+ */
 final class LogicalXor extends BinaryOperator
 {
     /**
@@ -50,7 +53,8 @@ final class LogicalXor extends BinaryOperator
 
         return array_reduce(
             $constraints,
-            static function (bool $matches, Constraint $constraint) use ($other): bool {
+            static function (bool $matches, Constraint $constraint) use ($other): bool
+            {
                 return $matches xor $constraint->evaluate($other, '', true);
             },
             $initial->evaluate($other, '', true)

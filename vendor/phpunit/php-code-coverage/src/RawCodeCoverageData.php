@@ -15,17 +15,25 @@ use function array_flip;
 use function array_intersect;
 use function array_intersect_key;
 use function count;
-use function file;
+use function explode;
+use function file_get_contents;
 use function in_array;
+use function is_file;
 use function range;
+use function trim;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
-use SebastianBergmann\CodeCoverage\StaticAnalysis\UncoveredFileAnalyser;
+use SebastianBergmann\CodeCoverage\StaticAnalysis\FileAnalyser;
 
 /**
  * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
  */
 final class RawCodeCoverageData
 {
+    /**
+     * @var array<string, array<int>>
+     */
+    private static $emptyLineCache = [];
+
     /**
      * @var array
      *
@@ -79,11 +87,11 @@ final class RawCodeCoverageData
         return new self($lineCoverage, $functionCoverage);
     }
 
-    public static function fromUncoveredFile(string $filename, UncoveredFileAnalyser $uncoveredFileAnalyser): self
+    public static function fromUncoveredFile(string $filename, FileAnalyser $analyser): self
     {
         $lineCoverage = [];
 
-        foreach ($uncoveredFileAnalyser->executableLinesIn($filename) as $line) {
+        foreach ($analyser->executableLinesIn($filename) as $line) {
             $lineCoverage[$line] = Driver::LINE_NOT_EXECUTED;
         }
 
@@ -94,6 +102,8 @@ final class RawCodeCoverageData
     {
         $this->lineCoverage     = $lineCoverage;
         $this->functionCoverage = $functionCoverage;
+
+        $this->skipEmptyLines();
     }
 
     public function clear(): void
@@ -119,7 +129,7 @@ final class RawCodeCoverageData
     /**
      * @param int[] $lines
      */
-    public function keepCoverageDataOnlyForLines(string $filename, array $lines): void
+    public function keepLineCoverageDataOnlyForLines(string $filename, array $lines): void
     {
         if (!isset($this->lineCoverage[$filename])) {
             return;
@@ -129,17 +139,25 @@ final class RawCodeCoverageData
             $this->lineCoverage[$filename],
             array_flip($lines)
         );
+    }
 
-        if (isset($this->functionCoverage[$filename])) {
-            foreach ($this->functionCoverage[$filename] as $functionName => $functionData) {
-                foreach ($functionData['branches'] as $branchId => $branch) {
-                    if (count(array_diff(range($branch['line_start'], $branch['line_end']), $lines)) > 0) {
-                        unset($this->functionCoverage[$filename][$functionName]['branches'][$branchId]);
+    /**
+     * @param int[] $lines
+     */
+    public function keepFunctionCoverageDataOnlyForLines(string $filename, array $lines): void
+    {
+        if (!isset($this->functionCoverage[$filename])) {
+            return;
+        }
 
-                        foreach ($functionData['paths'] as $pathId => $path) {
-                            if (in_array($branchId, $path['path'], true)) {
-                                unset($this->functionCoverage[$filename][$functionName]['paths'][$pathId]);
-                            }
+        foreach ($this->functionCoverage[$filename] as $functionName => $functionData) {
+            foreach ($functionData['branches'] as $branchId => $branch) {
+                if (count(array_diff(range($branch['line_start'], $branch['line_end']), $lines)) > 0) {
+                    unset($this->functionCoverage[$filename][$functionName]['branches'][$branchId]);
+
+                    foreach ($functionData['paths'] as $pathId => $path) {
+                        if (in_array($branchId, $path['path'], true)) {
+                            unset($this->functionCoverage[$filename][$functionName]['paths'][$pathId]);
                         }
                     }
                 }
@@ -180,5 +198,41 @@ final class RawCodeCoverageData
                 }
             }
         }
+    }
+
+    /**
+     * At the end of a file, the PHP interpreter always sees an implicit return. Where this occurs in a file that has
+     * e.g. a class definition, that line cannot be invoked from a test and results in confusing coverage. This engine
+     * implementation detail therefore needs to be masked which is done here by simply ensuring that all empty lines
+     * are skipped over for coverage purposes.
+     *
+     * @see https://github.com/sebastianbergmann/php-code-coverage/issues/799
+     */
+    private function skipEmptyLines(): void
+    {
+        foreach ($this->lineCoverage as $filename => $coverage) {
+            foreach ($this->getEmptyLinesForFile($filename) as $emptyLine) {
+                unset($this->lineCoverage[$filename][$emptyLine]);
+            }
+        }
+    }
+
+    private function getEmptyLinesForFile(string $filename): array
+    {
+        if (!isset(self::$emptyLineCache[$filename])) {
+            self::$emptyLineCache[$filename] = [];
+
+            if (is_file($filename)) {
+                $sourceLines = explode("\n", file_get_contents($filename));
+
+                foreach ($sourceLines as $line => $source) {
+                    if (trim($source) === '') {
+                        self::$emptyLineCache[$filename][] = ($line + 1);
+                    }
+                }
+            }
+        }
+
+        return self::$emptyLineCache[$filename];
     }
 }

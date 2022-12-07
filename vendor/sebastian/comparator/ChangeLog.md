@@ -2,6 +2,36 @@
 
 All notable changes are documented in this file using the [Keep a CHANGELOG](http://keepachangelog.com/) principles.
 
+## [4.0.8] - 2022-09-14
+
+### Fixed
+
+* [#102](https://github.com/sebastianbergmann/comparator/pull/102): Fix `float` comparison precision
+
+## [4.0.7] - 2022-09-14
+
+### Fixed
+
+* [#99](https://github.com/sebastianbergmann/comparator/pull/99): Fix weak comparison between `'0'` and `false`
+
+## [4.0.6] - 2020-10-26
+
+### Fixed
+
+* `SebastianBergmann\Comparator\Exception` now correctly extends `\Throwable`
+
+## [4.0.5] - 2020-09-30
+
+### Fixed
+
+* [#89](https://github.com/sebastianbergmann/comparator/pull/89): Handle PHP 8 `ValueError`
+
+## [4.0.4] - 2020-09-28
+
+### Changed
+
+* Changed PHP version constraint in `composer.json` from `^7.3 || ^8.0` to `>=7.3`
+
 ## [4.0.3] - 2020-06-26
 
 ### Added
@@ -26,6 +56,24 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
 
 * Removed support for PHP 7.1 and PHP 7.2
 
+## [3.0.5] - 2022-09-14
+
+### Fixed
+
+* [#102](https://github.com/sebastianbergmann/comparator/pull/102): Fix `float` comparison precision
+
+## [3.0.4] - 2022-09-14
+
+### Fixed
+
+* [#99](https://github.com/sebastianbergmann/comparator/pull/99): Fix weak comparison between `'0'` and `false`
+
+## [3.0.3] - 2020-11-30
+
+### Changed
+
+* Changed PHP version constraint in `composer.json` from `^7.1` to `>=7.1`
+
 ## [3.0.2] - 2018-07-12
 
 ### Changed
@@ -43,7 +91,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
 
 ### Fixed
 
-* Fixed [#48](https://github.com/sebastianbergmann/comparator/issues/48): `DateTimeComparator` does not support fractional second deltas
+* [#48](https://github.com/sebastianbergmann/comparator/issues/48): `DateTimeComparator` does not support fractional second deltas
 
 ### Removed
 
@@ -65,7 +113,7 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
 
 ### Fixed
 
-* Fixed [phpunit/#2923](https://github.com/sebastianbergmann/phpunit/issues/2923): Unexpected failed date matching
+* [phpunit/#2923](https://github.com/sebastianbergmann/phpunit/issues/2923): Unexpected failed date matching
 
 ## [2.1.0] - 2017-11-03
 
@@ -74,10 +122,18 @@ All notable changes are documented in this file using the [Keep a CHANGELOG](htt
 * Added `SebastianBergmann\Comparator\Factory::reset()` to unregister all non-default comparators
 * Added support for `phpunit/phpunit-mock-objects` version `^5.0`
 
+[4.0.8]: https://github.com/sebastianbergmann/comparator/compare/4.0.7...4.0.8
+[4.0.7]: https://github.com/sebastianbergmann/comparator/compare/4.0.6...4.0.7
+[4.0.6]: https://github.com/sebastianbergmann/comparator/compare/4.0.5...4.0.6
+[4.0.5]: https://github.com/sebastianbergmann/comparator/compare/4.0.4...4.0.5
+[4.0.4]: https://github.com/sebastianbergmann/comparator/compare/4.0.3...4.0.4
 [4.0.3]: https://github.com/sebastianbergmann/comparator/compare/4.0.2...4.0.3
 [4.0.2]: https://github.com/sebastianbergmann/comparator/compare/4.0.1...4.0.2
 [4.0.1]: https://github.com/sebastianbergmann/comparator/compare/4.0.0...4.0.1
-[4.0.0]: https://github.com/sebastianbergmann/comparator/compare/3.0.2...4.0.0
+[4.0.0]: https://github.com/sebastianbergmann/comparator/compare/3.0.5...4.0.0
+[3.0.5]: https://github.com/sebastianbergmann/comparator/compare/3.0.4...3.0.5
+[3.0.4]: https://github.com/sebastianbergmann/comparator/compare/3.0.3...3.0.4
+[3.0.3]: https://github.com/sebastianbergmann/comparator/compare/3.0.2...3.0.3
 [3.0.2]: https://github.com/sebastianbergmann/comparator/compare/3.0.1...3.0.2
 [3.0.1]: https://github.com/sebastianbergmann/comparator/compare/3.0.0...3.0.1
 [3.0.0]: https://github.com/sebastianbergmann/comparator/compare/2.1.3...3.0.0

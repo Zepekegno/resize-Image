@@ -19,11 +19,8 @@ use function str_pad;
 use function strlen;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Node\File;
-use SebastianBergmann\CodeCoverage\Percentage;
+use SebastianBergmann\CodeCoverage\Util\Percentage;
 
-/**
- * @internal This class is not covered by the backward compatibility promise for phpunit/php-code-coverage
- */
 final class Text
 {
     /**
