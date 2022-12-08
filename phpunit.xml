@@ -3,12 +3,11 @@
   <coverage>
     <include>
       <directory suffix=".php">src/</directory>
-      <directory suffix=".php">tests/</directory>
     </include>
   </coverage>
   <testsuites>
     <testsuite name="Resize Image">
-      <directory suffix=".php">tests</directory>
+      <directory suffix=".php">src/tests</directory>
     </testsuite>
   </testsuites>
 </phpunit>

@@ -12,8 +12,8 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Zepekegno\\": "src/",
-            "Zepekegno\\Tests\\": "tests/"
+            "Zepekegno\\": "src/"
+          
         }
     },
     "require": {

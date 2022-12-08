@@ -25,7 +25,6 @@ class ComposerStaticInitebb618a6a68fb8c2b25433e77bce75ed
     public static $prefixLengthsPsr4 = array (
         'Z' => 
         array (
-            'Zepekegno\\Tests\\' => 16,
             'Zepekegno\\' => 10,
         ),
         'S' => 
@@ -67,10 +66,6 @@ class ComposerStaticInitebb618a6a68fb8c2b25433e77bce75ed
     );
 
     public static $prefixDirsPsr4 = array (
-        'Zepekegno\\Tests\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/tests',
-        ),
         'Zepekegno\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
