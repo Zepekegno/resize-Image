@@ -3,7 +3,7 @@
 *.iml
 
 # Project Specific
-/.php_cs.cache
- /vendor/
- /.phpunit.result.cache
- /phpunit.xml.bak
+.php_cs.cache
+**/vendor
+.phpunit.result.cache
+phpunit.xml.bak
