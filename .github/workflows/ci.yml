@@ -50,4 +50,7 @@ jobs:
       
       - name: Run Test Suite
         run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        
+      - name: Upload Code Coverage to Codecov
+        uses: codecov/codecov-action@v2
       
