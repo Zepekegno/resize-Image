@@ -31,7 +31,7 @@ jobs:
             ${{ runner.os }}-php-
             
       - name: Install composer and dependencies
-        uses: php-actions/coposer@v6
+        uses: php-actions/composer@v6
         
       - name: PHPUnit Tests
         uses: php-actions/phpunit@v3
