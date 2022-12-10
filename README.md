@@ -1,7 +1,6 @@
 # Resize an Image
 
-[![Build Status](https://travis-ci.com/Zepekegno/Resize_Image.svg?branch=master)](https://travis-ci.com/Zepekegno/Resize_Image)
-[![Coverage Status](https://coveralls.io/repos/github/Zepekegno/Resize-Image/badge.svg?branch=master)](https://coveralls.io/github/Zepekegno/Resize-Image?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/zepekegno224/Resize-Image/badge.svg?branch=master)](https://coveralls.io/github/Zepekegno224/resize-image?branch=master)
 
 
  This Library will help you to convert easily and image into other format. this library use GD driver.
