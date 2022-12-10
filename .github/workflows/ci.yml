@@ -44,5 +44,8 @@ jobs:
           
       - name: Print PHP version
         run: echo ${{steps.setup-php.outputs.php-version}}
+      
+      - name: Run PHPUnit
+        run: vendor/phpunit
          
       
