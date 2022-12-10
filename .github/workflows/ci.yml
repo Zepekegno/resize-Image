@@ -56,4 +56,10 @@ jobs:
         with:
            files: ./coverage.xml
            verbose: true
+       
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{secret.GITHUB_TOKEN}}
+     
       
