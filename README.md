@@ -21,7 +21,7 @@
 // Example with png
 $source = 'image.png';
 
-$resizeImage = new zepekegno\Image\Resize($source,50,50);
+$resizeImage = new zepekegno\Resize($source,50,50);
 
 
 /**
@@ -36,7 +36,7 @@ $resizeImage->make(target:'tmp/final',quality:9,delete:true);
 
 $source = 'image.gif';
 
-$resizeImage = new zepekegno\Image\Resize($source,50,50);
+$resizeImage = new zepekegno\Resize($source,50,50);
 
 /**
  * If file exist a copy of this file will be created with suffix cpr
@@ -52,7 +52,7 @@ $resizeImage->make(target:'tmp/final',delete:true);
  * Return the path of image
 */
 $source = 'image.png';
-$convertImage = new zepekegno\Image\Resize(source:$source,height:50,width:50);
+$convertImage = new zepekegno\Resize(source:$source,height:50,width:50);
 $convertImage->convert(type:'jpeg',target:'tmp/final',quality:100,isResizable:false);
 
 /**
@@ -61,7 +61,7 @@ $convertImage->convert(type:'jpeg',target:'tmp/final',quality:100,isResizable:fa
  * Return the path of image
 */
 $source = 'image.png';
-$convertImage = new zepekegno\Image\Resize(source:$source,height:50,width:50);
+$convertImage = new zepekegno\Resize(source:$source,height:50,width:50);
 $img = $convertImage->convert(type:'jpeg',target:'tmp/final',quality:100,isResizable:true);
 
 // Generate image
