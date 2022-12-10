@@ -45,7 +45,7 @@ jobs:
       - name: Print PHP version
         run: echo ${{steps.setup-php.outputs.php-version}}
       
-      - name: Run PHPUnit
-        run: vendor/phpunit
+      - name: Setup Problem Matchers for PHPUnit
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
          
       
