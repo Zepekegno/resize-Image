@@ -33,18 +33,16 @@ jobs:
       - name: Install composer and dependencies
         uses: php-actions/composer@v6
         
-      - name: PHPUnit Tests
-        uses: php-actions/phpunit@v3
-        env: 
-          XDEBUG_MODE: coverage
-        with: 
-          bootstrap: vendor/autoload.php
-          configuration: phpunit.xml
-          php_extensions: xdebug, gd, imagick,mbstring
-          args: --coverage-clover ./coverage.xml
+      - name: Setup PHP
+        id: setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: imagick, gd, mbstring
+          tools: phpunit
+          coverage: xdebug
           
-      - name: Upload to CodeCov
-        uses: codecov/codecov-action@v2
-        with: 
-          files: ./coverage.xml
-          verbose: true
+      - name: Print PHP version
+        run: echo ${{steps.setup-php.outputs.php-version}}
+         
+      
