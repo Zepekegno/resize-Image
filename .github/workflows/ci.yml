@@ -49,11 +49,5 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       
       - name: Run Test Suite
-        run: vendor/bin/phpunit --coverage-clover clover.xml
-         
-      - name: Generate test coverage badge
-        uses: timkrase/phpunit-coverage-badge@v1.2.0
-        with:
-          coverage_badge_path: 'badge-coverage.svg'
-          push_badge: true
+        run: vendor/bin/phpunit --coverage-clover=coverage.xml
       
