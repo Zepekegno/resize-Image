@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checktout Code
+        uses: actions/checkout@v2
+        
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+      
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v3
+        with: 
+          path: actions/cache@v3
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+            
+      - name: Install composer and dependencies
+        uses: php-actions/coposer@v6
+        
+      - name: PHPUnit Tests
+        uses: php-actions/phpunit@v3
+        env: 
+          XDEBUG_MODE: coverage
+        with: 
+          bootstrap: vendor/autoload.php
+          configuration: phpunit.xml
+          php_extensions: xdebug
+          args: tests --coverage-clover ./coverage.xml
+          
+      - name: Upload to CodeCov
+        uses: codecov/codecov-action@v2
+        with: 
+          files: ./coverage.xml
+          verbose: true
