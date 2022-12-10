@@ -47,5 +47,10 @@ jobs:
       
       - name: Setup Problem Matchers for PHPUnit
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+      
+      - name: Run Test Suite
+        run: vendor/bin/phpunit
          
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
       
