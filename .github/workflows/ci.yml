@@ -49,7 +49,7 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       
       - name: Run Test Suite
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml
+        run: vendor/bin/phpunit
         
       - name: Upload Code Coverage to Codecov
         uses: codecov/codecov-action@v2
@@ -61,7 +61,8 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          composer global require twinh/php-coveralls
-          vendor/bin/php-coveralls --coverage_clover=build/logs/clover.xml -v
+          composer global require php-coveralls/php-coveralls
+          php-coveralls --coverage_clover=clover.xml -v
+
      
       
