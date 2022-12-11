@@ -49,13 +49,7 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       
       - name: Run Test Suite
-        run: vendor/bin/phpunit --colors=always --coverage-text --coverage-php build/cov/coverage-test.cov
-        
-      - name: Install Phpcov
-        run: composer require --dev phpunit/phpcov
-        
-      - name: Merge coverage.cov logs under build/cov
-        run: php vendor/bin/phpcov.php merge --clover build/logs/clover.xml build/cov
+        run: vendor/bin/phpunit --colors=always --coverage-text --coverage-clover build/logs/clover.xml
         
       - name: Upload coverage results to Coveralls
         env:
@@ -66,6 +60,8 @@ jobs:
         
       - name: Upload Code Coverage to Codecov
         uses: codecov/codecov-action@v3
+        with:
+           path-to-lcov: ./clover.xml
          
 
      
