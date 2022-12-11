@@ -1,7 +1,7 @@
 # Resize an Image
 ![example branch parameter](https://github.com/zepekegno224/resize-image/actions/workflows/ci.yml/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/zepekegno224/resize-image/badge.svg?branch=master)](https://coveralls.io/github/zepekegno224/resize-image?branch=master)
-[![Latest Stable Version](http://poser.pugx.org/zepekegno/resize_image/v)](https://packagist.org/packages/zepekegno/resize_image) [![Total Downloads](http://poser.pugx.org/zepekegno/resize_image/downloads)](https://packagist.org/packages/zepekegno/resize_image) [![Latest Unstable Version](http://poser.pugx.org/zepekegno/resize_image/v/unstable)](https://packagist.org/packages/zepekegno/resize_image) [![License](http://poser.pugx.org/zepekegno/resize_image/license)](https://packagist.org/packages/zepekegno/resize_image) [![PHP Version Require](http://poser.pugx.org/zepekegno/resize_image/require/php)](https://packagist.org/packages/zepekegno/resize_image)
+[![Latest Stable Version](http://poser.pugx.org/zepekegno/resize-image/v)](https://packagist.org/packages/zepekegno/resize-image) [![Total Downloads](http://poser.pugx.org/zepekegno/resize-image/downloads)](https://packagist.org/packages/zepekegno/resize-image) [![Latest Unstable Version](http://poser.pugx.org/zepekegno/resize-image/v/unstable)](https://packagist.org/packages/zepekegno/resize-image) [![License](http://poser.pugx.org/zepekegno/resize-image/license)](https://packagist.org/packages/zepekegno/resize-image) [![PHP Version Require](http://poser.pugx.org/zepekegno/resize-image/require/php)](https://packagist.org/packages/zepekegno/resize-image)
 
 
  This Library will help you to convert easily and image into other format. this library use GD driver.
