@@ -1,5 +1,5 @@
 {
-    "name": "zepekegno/resize-image",
+    "name": "zepekegno224/resize-image",
     "description": "Resize an image and convert into another format. driver use is GD",
     "type": "library",
     "license": "MIT",
@@ -12,7 +12,7 @@
     "minimum-stability": "stable",
     "autoload": {
         "psr-4": {
-            "Zepekegno\\": "src/"
+            "Zepekegno224\\": "src/"
           
         }
     },
