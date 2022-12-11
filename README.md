@@ -1,6 +1,7 @@
 # Resize an Image
 ![example branch parameter](https://github.com/zepekegno224/resize-image/actions/workflows/ci.yml/badge.svg?branch=master)
 [![codecov](https://codecov.io/gh/zepekegno224/resize-image/branch/master/graph/badge.svg?token=5YUQBHCHSU)](https://codecov.io/gh/zepekegno224/resize-image)
+[![Coverage Status](https://coveralls.io/repos/github/zepekegno224/resize-image/badge.svg?branch=master)](https://coveralls.io/github/zepekegno224/resize-image?branch=master)
 
  This Library will help you to convert easily and image into other format. this library use GD driver.
  PHP version supported *8
