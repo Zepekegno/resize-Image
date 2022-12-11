@@ -57,11 +57,9 @@ jobs:
            files: ./coverage.xml
            verbose: true
            
-      - name: Upload coverage results to Coveralls
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          composer global require twinh/php-coveralls
-          vendor/bin/php-coveralls --coverage_clover=build/logs/clover.xml -v
+      - name: Coverage Report as Comment (Clover)
+        uses: lucassabreu/comment-coverage-clover@main
+        with:
+          file: coverage.xml
      
       
