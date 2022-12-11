@@ -51,6 +51,9 @@ jobs:
       - name: Run Test Suite
         run: vendor/bin/phpunit --colors=always --coverage-text --coverage-php build/cov/coverage-test.cov
         
+      - name: Install Phpcov
+        run: composer require --dev phpunit/phpcov
+        
       - name: Merge coverage.cov logs under build/cov
         run: php vendor/bin/phpcov.php merge --clover build/logs/clover.xml build/cov
         
