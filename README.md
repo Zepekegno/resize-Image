@@ -3,6 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/zepekegno224/resize-image/badge.svg?branch=master)](https://coveralls.io/github/zepekegno224/resize-image?branch=master)
 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 ![GitHub all releases](https://img.shields.io/github/downloads/zepekegno224/resize-image/total)
+[![Latest Stable Version](http://poser.pugx.org/php-coveralls/php-coveralls/v)](https://packagist.org/packages/php-coveralls/php-coveralls)
 
  This Library will help you to convert easily and image into other format. this library use GD driver.
  PHP version supported *8
