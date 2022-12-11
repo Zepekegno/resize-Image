@@ -49,7 +49,7 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       
       - name: Run Test Suite
-        run: vendor/bin/phpunit --colors=always  --coverage-text
+        run: vendor/bin/phpunit --colors=always --coverage-text --coverage-clover ./coverage/lcov.info
         
       - name: Upload Code Coverage to Codecov
         uses: codecov/codecov-action@v2
