@@ -1,9 +1,8 @@
 # Resize an Image
 ![example branch parameter](https://github.com/zepekegno224/resize-image/actions/workflows/ci.yml/badge.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/zepekegno224/resize-image/badge.svg?branch=master)](https://coveralls.io/github/zepekegno224/resize-image?branch=master)
-[![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
-![GitHub all releases](https://img.shields.io/github/downloads/zepekegno224/resize-image/total)
-[![Latest Stable Version](http://poser.pugx.org/php-coveralls/php-coveralls/v)](https://packagist.org/packages/php-coveralls/php-coveralls)
+[![Latest Stable Version](http://poser.pugx.org/zepekegno/resize_image/v)](https://packagist.org/packages/zepekegno/resize_image) [![Total Downloads](http://poser.pugx.org/zepekegno/resize_image/downloads)](https://packagist.org/packages/zepekegno/resize_image) [![Latest Unstable Version](http://poser.pugx.org/zepekegno/resize_image/v/unstable)](https://packagist.org/packages/zepekegno/resize_image) [![License](http://poser.pugx.org/zepekegno/resize_image/license)](https://packagist.org/packages/zepekegno/resize_image) [![PHP Version Require](http://poser.pugx.org/zepekegno/resize_image/require/php)](https://packagist.org/packages/zepekegno/resize_image)
+
 
  This Library will help you to convert easily and image into other format. this library use GD driver.
  PHP version supported *8
