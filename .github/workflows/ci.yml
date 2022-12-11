@@ -60,13 +60,6 @@ jobs:
         
       - name: Upload Code Coverage to Codecov
         uses: codecov/codecov-action@v3
-  
-  
-      - name: Upload coverage results to Coveralls 2
-        uses: coverallsapp/github-action@master
-        with:
-           github-token: ${{secrets.GITHUB_TOKEN}}
-           path-to-lcov: ./clover.xml
          
 
      
