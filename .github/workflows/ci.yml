@@ -49,16 +49,18 @@ jobs:
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       
       - name: Run Test Suite
-        run: vendor/bin/phpunit --colors=always --coverage-text --coverage-clover=coverage.xml
+        run: vendor/bin/phpunit --colors=always --coverage-text --coverage-clover=coverage.html
         
       - name: Upload Code Coverage to Codecov
         uses: codecov/codecov-action@v3
          
       - name: Publish coverage report to coveralls.io
-        uses: coverallsapp/github-action@master
+        uses: zgosalvez/github-actions-report-lcov@v2
         with:
+          coverage-files: coverage.html
+          minimum-coverage: 90
+          artifact-name: code-coverage-report
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ${{ github.workspace }}/coverage/lcov.info
 
      
       
